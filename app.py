@@ -119,7 +119,7 @@ def start_date(start):
 @app.route("/api/v1.0/<start>/<end>")
 def start_end(start, end):
     """Return TMIN, TAVG, and TMAX for all dates between the start and end date inclusive"""
-    start_end_dates  = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)\
+    start_end_dates = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)\
                                    ).filter((Measurement.date >= start) & (Measurement.date <= end)).all()   
     results_list = []
     
