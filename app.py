@@ -59,10 +59,10 @@ def precipitation():
                                                                   ).order_by(Measurement.date).all()
     rain = []
     for r in last_year_rain:
-        row = {}
-        row["date"] = r.date
-        row["prcp"] = r.prcp
-        rain.append(row)
+        rain_results = {}
+        rain_results["date"] = r.date
+        rain_results["prcp"] = r.prcp
+        rain.append(rain_results)
 
     return jsonify(rain)
 
@@ -91,16 +91,16 @@ def tobs():
     tobs_list = []
     
     for t in tobs_year:
-        tobs_row = {}
-        tobs_row["date"] = t.date
-        tobs_row["tobs"] = t.tobs
-        tobs_list.append(tobs_row)
+        tobs_results = {}
+        tobs_results["date"] = t.date
+        tobs_results["tobs"] = t.tobs
+        tobs_list.append(tobs_results)
 
     return jsonify(tobs_list)
 
 
 @app.route("/api/v1.0/<start>")
-def trip_start(start):
+def start_date(start):
     """Return TMIN, TAVG, and TMAX for all dates greater than and equal to start date"""
     start_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs),func.max(Measurement.tobs)\
                                  ).filter(Measurement.date >= start).all()
@@ -117,17 +117,17 @@ def trip_start(start):
 
 
 @app.route("/api/v1.0/<start>/<end>")
-def trip_start_end(start, end):
+def start_end(start, end):
     """Return TMIN, TAVG, and TMAX for all dates between the start and end date inclusive"""
-    trip_start_end  = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)\
+    start_end_dates  = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)\
                                    ).filter((Measurement.date >= start) & (Measurement.date <= end)).all()   
     results_list = []
     
-    for data in trip_start_end:
+    for data in start_end_dates:
         results_row = {}
-        results_row["TMIN"] = trip_start_end[0][0]
-        results_row["TAVG"] = trip_start_end[0][1]
-        results_row["TMAX"] = trip_start_end[0][2]
+        results_row["TMIN"] = start_end_dates[0][0]
+        results_row["TAVG"] = start_end_dates[0][1]
+        results_row["TMAX"] = start_end_dates[0][2]
         results_list.append(results_row)
         
     return jsonify(results_list)
